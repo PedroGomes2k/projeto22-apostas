@@ -10,6 +10,12 @@ export type GameParameter = {
   awayTeamName: string;
 };
 
+export type GameOverParameter = {
+  homeTeamScore: number;
+  awayTeamScore: number;
+  isFinished: boolean;
+};
+
 export type ApplicationError = {
   name: string;
   message: string;

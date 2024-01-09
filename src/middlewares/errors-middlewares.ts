@@ -13,7 +13,7 @@ export default function errorHandlingMiddleware(
     return res.status(httpStatus.NOT_FOUND).send({message: error.message});
   }
 
-  if (error.name === "balanceBelowAmount") {
+  if (error.name === "balanceBelowAmount" || error.name === "gameWasFinished") {
     return res.status(httpStatus.CONFLICT).send({message: error.message});
   }
 

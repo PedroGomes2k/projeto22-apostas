@@ -17,7 +17,7 @@ async function getParticipantsById(id: number) {
   });
 }
 
-async function updateValeuParticipants(id: number,balance: number) {
+async function updateValueParticipants(id: number,balance: number) {
   return prisma.participant.update({
     where: { id },
     data: { balance },
@@ -28,5 +28,5 @@ export const participantRepository = {
   createParticipants,
   getParticipants,
   getParticipantsById,
-  updateValeuParticipants
+  updateValueParticipants
 };

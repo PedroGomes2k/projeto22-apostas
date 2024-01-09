@@ -1,8 +1,15 @@
 import prisma from "@/configs/database";
-import { GameParameter } from "@/protocols";
+import { GameOverParameter, GameParameter } from "@/protocols";
 
 async function createGame(data: GameParameter) {
   return prisma.game.create({
+    data,
+  });
+}
+
+async function createGameOver(id: number, data: GameOverParameter) {
+  return prisma.game.update({
+    where: { id },
     data,
   });
 }
@@ -13,12 +20,15 @@ async function getGames() {
 
 async function getGamesById(id: number) {
   return prisma.game.findFirst({
-    where:{id}
-  })
+    where: { id },
+  });
 }
+
 
 export const gamesRepository = {
   createGame,
+  createGameOver,
   getGames,
-  getGamesById
+  getGamesById,
+
 };

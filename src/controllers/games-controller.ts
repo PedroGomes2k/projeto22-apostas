@@ -1,4 +1,4 @@
-import { GameParameter } from "@/protocols";
+import { GameOverParameter, GameParameter } from "@/protocols";
 import { gamesServices } from "@/services";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
@@ -9,6 +9,23 @@ export async function postGames(req: Request, res: Response) {
   const reseponse = await gamesServices.createGames(homeTeamName, awayTeamName);
 
   return res.status(httpStatus.CREATED).send(reseponse);
+}
+
+export async function postGameOver(req: Request, res: Response) {
+  const { id } = req.params;
+
+  const idInt = Number(id);
+
+  const { homeTeamScore, awayTeamScore, isFinished } =
+    req.body as GameOverParameter;
+
+  await gamesServices.createGameOver(idInt, {
+    homeTeamScore,
+    awayTeamScore,
+    isFinished,
+  });
+
+  return res.sendStatus(httpStatus.CREATED);
 }
 
 export async function getGames(req: Request, res: Response) {
