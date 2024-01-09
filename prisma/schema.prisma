@@ -16,6 +16,7 @@ model Participant {
   updatedAt DateTime @updatedAt
   name      String
   balance   Int
+  Bet       Bet[]
 
   @@map("participants")
 }
@@ -26,24 +27,27 @@ model Game {
   updatedAt     DateTime @updatedAt
   homeTeamName  String
   awayTeamName  String
-  homeTeamScore Int @default(0)
-  awayTeamScore Int @default(0)
-  isFinished    Boolean @default(false)
+  homeTeamScore Int      @default(0)
+  awayTeamScore Int      @default(0)
+  isFinished    Boolean  @default(false)
+  Bet           Bet[]
 
   @@map("games")
 }
 
 model Bet {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   homeTeamScore Int
   awayTeamScore Int
   amountBet     Int
   gameId        Int
   participantId Int
-  status        String
-  amountWon     Int
+  status        String      @default("PENDING")
+  amountWon     Int?         
+  Game          Game        @relation(fields: [gameId], references: [id])
+  Participant   Participant @relation(fields: [participantId], references: [id])
 
   @@map("bets")
 }

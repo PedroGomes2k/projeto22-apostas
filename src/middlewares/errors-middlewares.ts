@@ -1,19 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
-import httpStatus from 'http-status';
+import { Request, Response, NextFunction } from "express";
+import httpStatus from "http-status";
+import { AppError } from "@/protocols";
 
-export type AppError = Error & {
-  name: string;
-};
 
 export default function errorHandlingMiddleware(
   error: Error | AppError,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction, // eslint-disable-line @typescript-eslint/no-unused-vars
+  next: NextFunction // eslint-disable-line @typescript-eslint/no-unused-vars
 ) {
+  if (error.name === "notFoundError") {
+    return res.status(httpStatus.NOT_FOUND).send({message: error.message});
+  }
 
-  if (error.name === 'notFoundError') {
-      return res.status(httpStatus.NOT_FOUND).send(error.message);
+  if (error.name === "balanceBelowAmount") {
+    return res.status(httpStatus.CONFLICT).send({message: error.message});
   }
 
   console.log(error);

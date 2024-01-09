@@ -1,7 +1,7 @@
 import Joi from "joi";
-import { ParticipantsSchema } from "@/protocols";
+import { ParticipantsParamter } from "@/protocols";
 
-export const participantsSchema = Joi.object<ParticipantsSchema>({
+export const participantsSchema = Joi.object<ParticipantsParamter>({
   name: Joi.string().required(),
   balance: Joi.number().min(10).required(),
 });

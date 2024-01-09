@@ -6,9 +6,9 @@ import httpStatus from "http-status";
 export async function postGames(req: Request, res: Response) {
   const { homeTeamName, awayTeamName } = req.body as GameParameter;
 
-  await gamesServices.createGames(homeTeamName, awayTeamName);
+  const reseponse = await gamesServices.createGames(homeTeamName, awayTeamName);
 
-  return res.sendStatus(httpStatus.CREATED);
+  return res.status(httpStatus.CREATED).send(reseponse);
 }
 
 export async function getGames(req: Request, res: Response) {
@@ -18,10 +18,9 @@ export async function getGames(req: Request, res: Response) {
 }
 
 export async function getGamesById(req: Request, res: Response) {
+  const { id } = req.params;
 
-  const {id} = req.params  
-  
-  const idInt = Number(id)
+  const idInt = Number(id);
 
   const response = await gamesServices.getGamesById(idInt);
 

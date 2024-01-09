@@ -1,2 +1,3 @@
 export * from "./participants-controller";
-export * from "./games-controllers";
+export * from "./games-controller";
+export * from "./bets-controller";
