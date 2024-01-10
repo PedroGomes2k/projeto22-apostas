@@ -26,7 +26,6 @@ describe("POST /participants", () => {
     const response = await server.post("/participants").send(body);
     expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
   });
-  
 
   it("should respond with status 201 when body is valid", async () => {
     const body = {
@@ -54,5 +53,16 @@ describe("GET /participants", () => {
 
     const response = await server.get("/participants");
     expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        {
+          id: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          name: expect.any(String),
+          balance: expect.any(Number),
+        },
+      ])
+    );
   });
 });

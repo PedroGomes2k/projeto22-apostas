@@ -1,5 +1,5 @@
 # Projeto de Apostas Esportivas 🌐💸
-Back-end para fazer apostas esportivas!
+Back-end para fazer apostas esportivas !
 
 ## Descrição
 
@@ -17,7 +17,7 @@ Bem-vindo ao nosso projeto de apostas esportivas, onde a emoção do jogo encont
 
 ## Como Rodar o Projeto
 
-1. Clone este Repositorio
+1. Clona este Repositorio
 2. Instalar Dependências:
 
 ```bash
@@ -47,7 +47,7 @@ npm run dev
 
 ```bash
 
-npm test
+npm run test
 ```
 
 Agora, o projeto estará rodando localmente e você pode explorar a empolgante experiência de apostas esportivas. Boa sorte e boas apostas! 🏆💰

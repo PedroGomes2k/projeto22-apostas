@@ -20,7 +20,7 @@ async function getGames() {
 
 async function getGamesById(id: number) {
   return prisma.game.findFirst({
-    where: { id },
+    where: { id:id },
   });
 }
 

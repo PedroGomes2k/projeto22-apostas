@@ -18,11 +18,12 @@ async function createGames(homeTeamName: string, awayTeamName: string) {
 async function createGameOver(id: number, data: GameOverParameter) {
   const verifyGameById = await getGamesById(id);
   if (!verifyGameById) throw notFoundError();
-  if (verifyGameById.gameById.isFinished === true) throw gameWasFinished();
+  if (verifyGameById.isFinished === true) throw gameWasFinished();
 
   const gameOver = await gamesRepository.createGameOver(id, data);
 
   await updateBets(id, data, gameOver.homeTeamScore, gameOver.awayTeamScore);
+  return gameOver;
 }
 
 async function updateBets(
@@ -64,13 +65,6 @@ async function updateBets(
       );
     }
   });
-
-  /* for(let i = 0; i < sumBetsWinners.length; i++){
-    await betRepository.updateBetById(id, sumBetsWinners., "WON")
-  }
-*/
-
-  //betRepository.updateBetById(id, , "WON")
 }
 
 async function getGames() {
@@ -87,7 +81,8 @@ async function getGamesById(id: number) {
   const betsByGameId = await betRepository.getBetById(id);
   if (!betsByGameId) throw notFoundError();
 
-  return { gameById, bets: betsByGameId };
+  const response = { ...gameById, bets: betsByGameId };
+  return response;
 }
 
 export const gamesServices = {

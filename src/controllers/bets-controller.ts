@@ -15,7 +15,5 @@ export async function postBet(req: Request, res: Response) {
     participantId,
   });
 
-  console.log(response)
-
   return res.status(httpStatus.CREATED).send(response);
 }
