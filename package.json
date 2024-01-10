@@ -2,10 +2,15 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json && tsc-alias",
     "dev": "nodemon src/server.ts",
-    "start": "prisma migrate deploy && node dist/server.js",
+    "migration:run": "prisma migrate deploy",
+    "seed": "prisma db seed",
+    "start": "npm run migration:run && npm run seed && node dist/index.js",
     "test": "dotenv -e .env.test  prisma migrate deploy && dotenv -e .env.test jest -- --runInBand",
     "test:coverage": "npm run test -- --coverage",
     "test:report": "dotenv -e .env.test prisma migrate deploy & dotenv -e .env.test jest -- --coverage --runInBand --coverageReporters=json-summary --coverageDirectory=coverage --collectCoverageFrom='**/*.ts'"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
