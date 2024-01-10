@@ -1,5 +1,5 @@
 import { ParticipantsParamter } from "@/protocols";
-import { partticipantsService } from "@/services";
+import { partticipantsService } from "../services";
 import { Request, Response, response } from "express";
 import httpStatus from "http-status";
 

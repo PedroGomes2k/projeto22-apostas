@@ -1,4 +1,4 @@
-import { participantRepository } from "@/repositories/participants-repository";
+import { participantRepository } from "../repositories/participants-repository";
 
 async function postParticipant(name: string, balance: number) {
   const data = { name, balance };

@@ -1,4 +1,4 @@
-import prisma from "@/configs/database";
+import prisma from "../configs/database";
 import { ParticipantsParamter } from "@/protocols";
 
 async function createParticipants(data: ParticipantsParamter) {
