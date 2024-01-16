@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { AppError } from "@/protocols";
 
-
 export default function errorHandlingMiddleware(
   error: Error | AppError,
   _req: Request,
@@ -10,11 +9,15 @@ export default function errorHandlingMiddleware(
   next: NextFunction // eslint-disable-line @typescript-eslint/no-unused-vars
 ) {
   if (error.name === "notFoundError") {
-    return res.status(httpStatus.NOT_FOUND).send({message: error.message});
+    return res.status(httpStatus.NOT_FOUND).send({ message: error.message });
   }
 
-  if (error.name === "balanceBelowAmount" || error.name === "gameWasFinished") {
-    return res.status(httpStatus.CONFLICT).send({message: error.message});
+  if (
+    error.name === "balanceBelowAmount" ||
+    error.name === "gameWasFinished" ||
+    error.name === "negativeValue"
+  ) {
+    return res.status(httpStatus.CONFLICT).send({ message: error.message });
   }
 
   console.log(error);

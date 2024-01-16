@@ -13,9 +13,18 @@ export async function createGame() {
   });
 }
 
-export async function gameOverFinish(id: number, data: GameOverParameter) {
+export async function gameOverFinish(
+  id: number,
+  homeTeamScore: number,
+  awayTeamScore: number,
+  isFinished: boolean
+) {
   return prisma.game.update({
     where: { id },
-    data,
+    data: {
+      homeTeamScore,
+      awayTeamScore,
+      isFinished,
+    },
   });
 }

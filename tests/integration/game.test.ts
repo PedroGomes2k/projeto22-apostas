@@ -8,7 +8,13 @@ import {
   createParticipant,
   createGame,
   gameOverFinish,
+  getParticipantsById,
+  updateBet,
+  generateBetsForGame,
+  updateBetsWin,
 } from "../factory";
+import { error } from "console";
+
 beforeAll(async () => {
   await cleanDB();
 });
@@ -126,6 +132,7 @@ describe("GET /games/:id", () => {
 });
 
 describe("POST /games/:id/finish", () => {
+ 
   it("should respond with status 404 when params don't exist", async () => {
     const response = await server.get("/games/-1/finish");
     expect(response.status).toBe(httpStatus.NOT_FOUND);
@@ -143,11 +150,22 @@ describe("POST /games/:id/finish", () => {
     const body = {
       homeTeamScore: 0,
       awayTeamScore: "",
-      isFinished: "",
     };
 
     const response = await server.post(`/games/${gameId.id}/finish`).send(body);
     expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+  });
+
+  it("should respond with status 409 when valeu of body is negative ", async () => {
+    const gameId = await createGame();
+
+    const body = {
+      homeTeamScore: 0,
+      awayTeamScore: -1,
+    };
+
+    const response = await server.post(`/games/${gameId.id}/finish`).send(body);
+    expect(response.status).toBe(httpStatus.CONFLICT);
   });
 
   it("should respond with status 409 when game was finished ", async () => {
@@ -156,22 +174,27 @@ describe("POST /games/:id/finish", () => {
     const body = {
       homeTeamScore: 0,
       awayTeamScore: 0,
-      isFinished: true,
     };
-    await gameOverFinish(gameId.id, body);
+    await gameOverFinish(
+      gameId.id,
+      body.homeTeamScore,
+      body.awayTeamScore,
+      true
+    );
     const response = await server.post(`/games/${gameId.id}/finish`).send(body);
     expect(response.status).toBe(httpStatus.CONFLICT);
   });
 
-  it("should respond with status 200 ", async () => {
+  it("should respond with status 200, verify the router is work ", async () => {
     const gameId = await createGame();
+
     const body = {
       homeTeamScore: 0,
       awayTeamScore: 0,
-      isFinished: true,
     };
 
     const response = await server.post(`/games/${gameId.id}/finish`).send(body);
+
     expect(response.status).toBe(httpStatus.CREATED);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -186,15 +209,23 @@ describe("POST /games/:id/finish", () => {
       })
     );
   });
+
+  it("should respond with status 200, verify if balance of participant change ", async () => {
+    const { partcipantId, participantBalance, gameId } =
+      await generateBetsForGame();
+
+    const body = {
+      homeTeamScore: 1,
+      awayTeamScore: 0,
+    };
+
+    const response = await server.post(`/games/${gameId}/finish`).send(body);
+
+    await updateBetsWin(gameId, partcipantId, participantBalance);
+    const balance = await getParticipantsById(partcipantId);
+    
+    if (balance.balance < participantBalance) throw error();
+
+    expect(response.status).toBe(httpStatus.CREATED);
+  }, 10000);
 });
-
-/*
- it("should respond with status 422 when", async () => {
-      
-
-    const response = await server.post(`/games/:id/finish`).send(body);
-    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
-  })
-
-
-*/

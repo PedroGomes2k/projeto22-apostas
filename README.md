@@ -50,4 +50,11 @@ npm run dev
 npm run test
 ```
 
+### Deploy do Banco de dados
+
+```bash
+https://driven-apostas.onrender.com
+```
+
+
 Agora, o projeto estará rodando localmente e você pode explorar a empolgante experiência de apostas esportivas. Boa sorte e boas apostas! 🏆💰

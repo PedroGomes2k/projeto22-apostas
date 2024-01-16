@@ -1,5 +1,10 @@
 import prisma from "@/configs/database";
-import { BetParameter, GameOverParameter } from "@/protocols";
+import {
+  BetParameter,
+  DataUpdateParameter,
+  GameOverParameter,
+  WhereUpdateParameter,
+} from "@/protocols";
 
 async function createBet(data: BetParameter) {
   return prisma.bet.create({
@@ -27,25 +32,19 @@ async function updateBetById(
   participantId?: number,
   homeTeamScore?: number,
   awayTeamScore?: number,
-  amountPass?: number,
+  amount?: number,
   statusPass?: string
 ) {
   const status = statusPass || "LOST";
-  const amountWon = amountPass || 0;
+  const amountWon = amount || 0;
 
   return prisma.bet.updateMany({
     where: { gameId, participantId, homeTeamScore, awayTeamScore },
-    data: {
-      amountWon,
-      status,
-    },
+    data: { amountWon, status },
   });
 }
 
-async function getBetGameScore(
-  id: number,
-  data: Omit<GameOverParameter, "isFinished">
-) {
+async function getBetGameScore(id: number, data: GameOverParameter) {
   const resultsScore = await prisma.bet.findMany({
     where: {
       gameId: id,

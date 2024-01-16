@@ -13,7 +13,6 @@ export type GameParameter = {
 export type GameOverParameter = {
   homeTeamScore: number;
   awayTeamScore: number;
-  isFinished: boolean;
 };
 
 export type ApplicationError = {
@@ -32,4 +31,15 @@ export type BetParameter = {
 export type AppError = Error & {
   name: string;
   message: string;
+};
+
+export type WhereUpdateParameter = {
+  participantId: number;
+  homeTeamScore: number;
+  awayTeamScore: number;
+};
+
+export type DataUpdateParameter = {
+  amountPass: number;
+ 
 };

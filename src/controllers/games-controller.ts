@@ -16,13 +16,12 @@ export async function postGameOver(req: Request, res: Response) {
 
   const idInt = Number(id);
 
-  const { homeTeamScore, awayTeamScore, isFinished } =
+  const { homeTeamScore, awayTeamScore } =
     req.body as GameOverParameter;
 
   const response = await gamesServices.createGameOver(idInt, {
     homeTeamScore,
     awayTeamScore,
-    isFinished,
   });
 
   return res.status(httpStatus.CREATED).send(response);

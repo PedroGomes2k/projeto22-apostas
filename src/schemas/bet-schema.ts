@@ -8,3 +8,4 @@ export const betSchema = Joi.object<BetParameter>({
   gameId: Joi.number().required(),
   participantId: Joi.number().required(),
 });
+ 

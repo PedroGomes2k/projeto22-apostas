@@ -4,7 +4,11 @@ import { faker } from "@faker-js/faker";
 import { cleanDB } from "../helpers";
 import app from "@/app";
 import { createGame, gameOverFinish } from "../factory/game-factory";
-import { createParticipant } from "../factory/participant-factory";
+import {
+  createParticipant,
+  getParticipantsById,
+} from "../factory/participant-factory";
+import { error } from "console";
 
 beforeAll(async () => {
   await cleanDB();
@@ -61,7 +65,21 @@ describe("POST /bets", () => {
       const body = {
         homeTeamScore: 0,
         awayTeamScore: 0,
-        amountBet: 200,
+        amountBet: 2000,
+        gameId: gameId.id,
+        participantId: participant.id,
+      };
+      const response = await server.post("/bets").send(body);
+      expect(response.status).toBe(httpStatus.CONFLICT);
+    });
+
+    it("should respond with status 409 when you try post a negative value on bet or a bet equal 0", async () => {
+      const gameId = await createGame();
+      const participant = await createParticipant();
+      const body = {
+        homeTeamScore: 0,
+        awayTeamScore: 0,
+        amountBet: 0,
         gameId: gameId.id,
         participantId: participant.id,
       };
@@ -82,10 +100,14 @@ describe("POST /bets", () => {
       const data = {
         awayTeamScore: body.awayTeamScore,
         homeTeamScore: body.homeTeamScore,
-        isFinished: true,
       };
 
-      await gameOverFinish(gameId.id, data);
+      await gameOverFinish(
+        gameId.id,
+        data.awayTeamScore,
+        data.homeTeamScore,
+        true
+      );
 
       const response = await server.post("/bets").send(body);
       expect(response.status).toBe(httpStatus.CONFLICT);
@@ -103,6 +125,10 @@ describe("POST /bets", () => {
       };
 
       const response = await server.post("/bets").send(body);
+      const verifyBalance = await getParticipantsById(participant.id);
+     
+      if(verifyBalance.balance  > participant.balance) throw error()
+
 
       expect(response.status).toBe(httpStatus.CREATED);
       expect(response.body).toEqual(

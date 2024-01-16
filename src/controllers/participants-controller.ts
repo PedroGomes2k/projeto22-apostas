@@ -1,6 +1,6 @@
 import { ParticipantsParamter } from "@/protocols";
 import { partticipantsService } from "../services";
-import { Request, Response, response } from "express";
+import { Request, Response} from "express";
 import httpStatus from "http-status";
 
 export async function postParticipant(req: Request, res: Response) {

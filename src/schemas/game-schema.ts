@@ -9,5 +9,4 @@ export const GameSchema = Joi.object<GameParameter>({
 export const gameOverSchema = Joi.object<GameOverParameter>({
   homeTeamScore: Joi.number().required(),
   awayTeamScore: Joi.number().required(),
-  isFinished: Joi.boolean().valid(true).required(),
 });

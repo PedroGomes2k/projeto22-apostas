@@ -1,5 +1,6 @@
 import { balanceBelowAmount } from "@/errors/balance-below-amount-error";
 import { gameWasFinished } from "@/errors/game-was-finished-error";
+import { negativeValue } from "@/errors/negative-values-error";
 import { notFoundError } from "@/errors/not-found-error-error";
 import { BetParameter } from "@/protocols";
 import {
@@ -9,28 +10,45 @@ import {
 } from "@/repositories";
 
 async function postBet(data: BetParameter) {
-  const verifyParticipant = await participantRepository.getParticipantsById(
-    data.participantId
+  const { amountBet, participantId, gameId } = data;
+
+  if (amountBet <= 0) throw negativeValue("You cant post a bet with a negative value");
+  const verifyParticipant = await verifyParticipantById(
+    participantId,
+    amountBet
   );
 
-  if (!verifyParticipant) throw notFoundError();
-  if (verifyParticipant.balance < data.amountBet) throw balanceBelowAmount();
-
-  const verifyGame = await gamesRepository.getGamesById(data.gameId);
-  if (!verifyGame) throw notFoundError();
-  if (verifyGame.isFinished === true)
-    throw gameWasFinished("You can't post a new bet for a finished game");
+  await verifyGame(gameId);
 
   const response = await betRepository.createBet(data);
 
-  const balance = verifyParticipant.balance - data.amountBet;
-
-  await updateBet(verifyParticipant.id, balance);
+  await updateValue(participantId, verifyParticipant.balance, amountBet);
 
   return response;
 }
 
-async function updateBet(id: number, balance: number) {
+async function verifyParticipantById(id: number, amountBet: number) {
+  const verifyParticipant = await participantRepository.getParticipantsById(id);
+  if (!verifyParticipant) throw notFoundError();
+  if (verifyParticipant.balance < amountBet) throw balanceBelowAmount();
+
+  return verifyParticipant;
+}
+
+async function verifyGame(id: number) {
+  const verifyGame = await gamesRepository.getGamesById(id);
+  if (!verifyGame) throw notFoundError();
+  if (verifyGame.isFinished === true)
+    throw gameWasFinished("You can't post a new bet for a finished game");
+}
+
+async function updateValue(
+  id: number,
+  participantBalance: number,
+  amountBet: number
+) {
+  const balance = participantBalance - amountBet;
+
   await participantRepository.updateValueParticipants(id, balance);
 }
 
