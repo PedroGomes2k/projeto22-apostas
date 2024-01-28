@@ -18,6 +18,7 @@ async function createGames(homeTeamName: string, awayTeamName: string) {
 }
 
 async function createGameOver(id: number, data: GameOverParameter) {
+
   if (data.awayTeamScore < 0 || data.homeTeamScore < 0) throw negativeValue();
   const game = await getGamesById(id);
 
@@ -29,9 +30,11 @@ async function createGameOver(id: number, data: GameOverParameter) {
     data.awayTeamScore,
     true
   );
+
   await betRepository.updateBetById(id);
 
   await updateBets(id, data);
+
   return gameOver;
 }
 
@@ -54,6 +57,7 @@ async function getGamesById(id: number) {
 }
 
 async function updateBets(id: number, data: GameOverParameter) {
+  
   const verifyScore = await verifyGameScore(id, data);
   const betsByGameId = await betRepository.getSumBetsById(id);
 

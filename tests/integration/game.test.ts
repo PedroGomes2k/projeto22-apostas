@@ -222,6 +222,7 @@ describe("POST /games/:id/finish", () => {
     const response = await server.post(`/games/${gameId}/finish`).send(body);
 
     await updateBetsWin(gameId, partcipantId, participantBalance);
+    
     const balance = await getParticipantsById(partcipantId);
     
     if (balance.balance < participantBalance) throw error();

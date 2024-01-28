@@ -13,6 +13,7 @@ async function postBet(data: BetParameter) {
   const { amountBet, participantId, gameId } = data;
 
   if (amountBet <= 0) throw negativeValue("You cant post a bet with a negative value");
+  
   const verifyParticipant = await verifyParticipantById(
     participantId,
     amountBet
