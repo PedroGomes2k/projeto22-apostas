@@ -33,7 +33,7 @@ npm install
 
 ```bash
 npx prisma migrate dev
-```
+```Controllers
 
 5. Executar o Projeto:
 
